@@ -1,19 +1,24 @@
+import { useContext } from 'react';
 import NewMeetupForm from '../../components/meetups/NewMeetupForm';
+import DataContext from '../../models/data-context';
 
 export default function NewMeetupPage() {
+  const dataCtx = useContext(DataContext);
   async function addMeetupFunction(enteredMeetupData) {
+    dataCtx.handleBackdropOpen();
     try {
-      console.info(enteredMeetupData);
       const response = await fetch('/api/meetups', {
         method: 'POST',
         body: JSON.stringify(enteredMeetupData),
         headers: { 'Content-Type': 'application/json' },
       });
       const data = await response.json();
-      console.info(data);
+      dataCtx.handleSnackbarOpen('Your meetup has been added.', 'success');
     } catch (error) {
-      console.error(error.stack);
+      dataCtx.handleSnackbarOpen('An error occurred.', 'error');
+      console.error(error);
     }
+    dataCtx.handleBackdropClose();
   }
 
   return <NewMeetupForm onAddMeetup={addMeetupFunction} />;

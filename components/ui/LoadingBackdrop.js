@@ -1,20 +1,19 @@
-import * as React from 'react';
+import { useContext } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import DataContext from '../../models/data-context';
 
 export default function LoadingBackdrop() {
-  const [open, setOpen] = React.useState(false);
+  const dataCtx = useContext(DataContext);
+
   const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
+    dataCtx.handleBackdropClose();
   };
 
   return (
     <Backdrop
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={open}
+      open={dataCtx.backdropOpen}
       onClick={handleClose}>
       <CircularProgress color="inherit" />
     </Backdrop>
