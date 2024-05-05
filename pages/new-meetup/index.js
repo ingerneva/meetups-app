@@ -17,7 +17,7 @@ export default function NewMeetupPage() {
       });
       const data = await response.json();
       dataCtx.handleSnackbarOpen('Your meetup has been added.', 'success');
-      router.push('/');
+      await router.push('/');
     } catch (error) {
       dataCtx.handleSnackbarOpen('An error occurred.', 'error');
       console.error(error);
