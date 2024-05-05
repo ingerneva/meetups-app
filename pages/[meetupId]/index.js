@@ -67,6 +67,7 @@ export async function getStaticProps(context) {
     delete newResult._id;
     return newResult;
   });
+  console.info(mappedResult);
   return {
     props: {
       meetupData: mappedResult[0],
@@ -79,5 +80,6 @@ export async function getStaticProps(context) {
       //   description: 'This is a first meetup',
       // },
     },
+    revalidate: 1,
   };
 }

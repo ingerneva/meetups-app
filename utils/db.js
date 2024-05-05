@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 const user = process.env.DB_USER;
 const password = encodeURIComponent(process.env.DB_PASS);
@@ -12,12 +12,12 @@ export async function getMeetups(meetupId) {
     const db = client.db();
 
     let meetUps;
-    if (meetUps === undefined) {
+    if (meetupId === undefined) {
       meetUps = await db.collection('meetups').find().toArray();
     } else {
       meetUps = await db
         .collection('meetups')
-        .find({ _id: meetupId })
+        .find({ _id: new ObjectId(meetupId) })
         .toArray();
     }
 
@@ -34,7 +34,7 @@ export async function addMeetup(meetupData) {
     const db = client.db();
 
     const data = meetupData;
-    const { title, image, address, description } = meetupData;
+    // const { title, image, address, description } = meetupData;
 
     const meetupsCollection = db.collection('meetups');
     const result = await meetupsCollection.insertOne(data);
