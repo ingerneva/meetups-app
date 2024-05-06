@@ -2,6 +2,7 @@ import Head from 'next/head';
 import MeetupList from '../components/meetups/MeetupList';
 import { getMeetups } from '../utils/db';
 import PropTypes from 'prop-types';
+import Error from 'next/error';
 
 const DUMMY_MEETUPS = [
   {
@@ -23,11 +24,14 @@ const DUMMY_MEETUPS = [
 ];
 
 HomePage.propTypes = {
+  errorCode: PropTypes.number,
   meetups: PropTypes.array,
 };
 
-export default function HomePage({ meetups }) {
-  return (
+export default function HomePage({ errorCode, meetups }) {
+  return errorCode ? (
+    <Error statusCode={errorCode} />
+  ) : (
     <>
       <Head>
         <title>React Meetups</title>
@@ -42,16 +46,24 @@ export default function HomePage({ meetups }) {
 }
 
 export async function getStaticProps() {
-  const result = await getMeetups();
-  const mappedResult = result.map((el) => {
-    const newResult = { ...el, id: el._id.toString() };
-    delete newResult._id;
-    return newResult;
-  });
-  return {
-    props: {
-      meetups: mappedResult,
-    },
-    revalidate: 1,
-  };
+  try {
+    const result = await getMeetups();
+    const mappedResult = result.map((el) => {
+      const newResult = { ...el, id: el._id.toString() };
+      delete newResult._id;
+      return newResult;
+    });
+    return {
+      props: {
+        meetups: mappedResult,
+      },
+      revalidate: 1,
+    };
+  } catch (error) {
+    return {
+      props: {
+        errorCode: 500,
+      },
+    };
+  }
 }

@@ -15,12 +15,14 @@ export default function NewMeetupPage() {
         body: JSON.stringify(enteredMeetupData),
         headers: { 'Content-Type': 'application/json' },
       });
-      const data = await response.json();
+
+      if (!response.ok) throw new Error('An error occurred adding the meetup.');
+
       dataCtx.handleSnackbarOpen('Your meetup has been added.', 'success');
       await router.push('/');
     } catch (error) {
       dataCtx.handleSnackbarOpen('An error occurred.', 'error');
-      console.error(error);
+      console.error(error.stack);
     }
     dataCtx.handleBackdropClose();
   }

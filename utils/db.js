@@ -24,25 +24,28 @@ export async function getMeetups(meetupId) {
     await client.close();
     return meetUps;
   } catch (error) {
-    console.info(error.stack);
+    console.error(error.stack);
   }
 }
 
+/**
+ *
+ * @param {object} meetupData
+ * @param {string} meetupData.title
+ * @param {string} meetupData.image The image URL.
+ * @param {string} meetupData.address
+ * @param {string} meetupData.description
+ * @returns {{message: string}}
+ */
 export async function addMeetup(meetupData) {
-  try {
-    const client = await MongoClient.connect(connString);
-    const db = client.db();
+  const client = await MongoClient.connect(connString);
+  const db = client.db();
 
-    const data = meetupData;
-    // const { title, image, address, description } = meetupData;
+  const data = meetupData;
 
-    const meetupsCollection = db.collection('meetups');
-    const result = await meetupsCollection.insertOne(data);
-    console.info(result);
+  const meetupsCollection = db.collection('meetups');
+  await meetupsCollection.insertOne(data);
 
-    await client.close();
-    return { message: 'Meetup inserted!' };
-  } catch (error) {
-    console.info(error.stack);
-  }
+  await client.close();
+  return { message: 'Meetup inserted!' };
 }

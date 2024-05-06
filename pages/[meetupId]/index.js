@@ -43,7 +43,7 @@ export async function getStaticPaths() {
     params: { meetupId: el._id.toString() },
   }));
   return {
-    fallback: true,
+    fallback: false,
     paths: mappedResult,
     // paths: [
     //   {
@@ -67,7 +67,6 @@ export async function getStaticProps(context) {
     delete newResult._id;
     return newResult;
   });
-  console.info(mappedResult);
   return {
     props: {
       meetupData: mappedResult[0],
