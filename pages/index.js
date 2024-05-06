@@ -45,7 +45,7 @@ export default function HomePage({ errorCode, meetups }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
     const result = await getMeetups();
     const mappedResult = result.map((el) => {
@@ -57,7 +57,6 @@ export async function getStaticProps() {
       props: {
         meetups: mappedResult,
       },
-      revalidate: 1,
     };
   } catch (error) {
     return {
